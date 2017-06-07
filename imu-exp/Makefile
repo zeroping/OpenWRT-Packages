@@ -5,10 +5,13 @@
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
 #
+# This package will install the following:
+# * The IMU Expansion C library
+# * The imu-exp command line program
+# * An example program to showcase the library functions
 
 include $(TOPDIR)/rules.mk
-PKG_NAME:=libimuexp
-PKG_VERSION:=0.1
+PKG_NAME:=imu-exp
 PKG_RELEASE:=1
 
 
@@ -21,8 +24,9 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
 include $(INCLUDE_DIR)/package.mk
 
-# Package definition
-define Package/$(PKG_NAME)
+# Package definitions
+## library
+define Package/libonionimuexp
 	SECTION:=onion
 	CATEGORY:=Onion
 	SUBMENU:=Libraries
@@ -30,9 +34,11 @@ define Package/$(PKG_NAME)
 	DEPENDS:=+liboniondebug +libonioni2c
 endef
 
-define Package/$(PKG_NAME)/description
+define Package/libonionimuexp/description
 C library for the Onion IMU Expansion
 endef
+
+
 
 # Enable position independent code for shared libraries
 TARGET_CFLAGS += $(FPIC)
@@ -51,14 +57,14 @@ define Build/InstallDev
 	mkdir -p $(1)/usr/include $(1)/usr/lib
 	$(CP)   $(PKG_BUILD_DIR)/include/imu-exp.h $(1)/usr/include/
 	$(CP)	$(PKG_BUILD_DIR)/lib/libonionimuexp.so $(1)/usr/lib/
-	# $(CP)   $(PKG_BUILD_DIR)/include/onion-i2c.h $(1)/usr/include/
-	# $(CP)	$(PKG_BUILD_DIR)/lib/libonioni2c.so $(1)/usr/lib/
-	# $(CP)   $(PKG_BUILD_DIR)/include/onion-mcp23008-driver.h $(1)/usr/include/
-	# $(CP)	$(PKG_BUILD_DIR)/lib/libonionmcp23008.so $(1)/usr/lib/
-	# $(CP)   $(PKG_BUILD_DIR)/include/pwm-exp.h $(1)/usr/include/
-	# $(CP)	$(PKG_BUILD_DIR)/lib/libonionpwmexp.so $(1)/usr/lib/
-	# $(CP)   $(PKG_BUILD_DIR)/include/relay-exp.h $(1)/usr/include/
-	# $(CP)	$(PKG_BUILD_DIR)/lib/libonionrelayexp.so $(1)/usr/lib/
-	# $(CP)   $(PKG_BUILD_DIR)/include/oled-exp.h $(1)/usr/include/
-	# $(CP)	$(PKG_BUILD_DIR)/lib/libonionoledexp.so $(1)/usr/lib/
 endef
+
+# install instructions
+define Package/$(PKG_NAME)/install
+	# install the static library object
+	$(INSTALL_DIR) $(1)/usr/lib
+	$(CP) 	$(PKG_BUILD_DIR)/lib/libonionimuexp.so $(1)/usr/lib/
+endef
+
+# build the things
+$(eval $(call BuildPackage,liboniondebug))
