@@ -12,6 +12,7 @@
 
 include $(TOPDIR)/rules.mk
 PKG_NAME:=imu-exp
+PKG_VERSION:=0.1
 PKG_RELEASE:=1
 
 
@@ -38,10 +39,22 @@ define Package/libonionimuexp/description
 C library for the Onion IMU Expansion
 endef
 
+## example program
+define Package/imu-exp-test
+	SECTION:=onion
+	CATEGORY:=Onion
+	SUBMENU:=Drivers
+	TITLE:=Example IMU Expansion program
+	DEPENDS:=+liboniondebug +libonioni2c +libonionimuexp
+endef
 
+define Package/imu-exp-test/description
+Example IMU Expansion program
+endef
 
 # Enable position independent code for shared libraries
 TARGET_CFLAGS += $(FPIC)
+TARGET_LIBS = -loniondebug -lonioni2c # is this correct?
 
 # Compiling
 define Build/Compile
@@ -60,10 +73,17 @@ define Build/InstallDev
 endef
 
 # install instructions
-define Package/$(PKG_NAME)/install
+## library
+define Package/libonionimuexp/install
 	# install the static library object
 	$(INSTALL_DIR) $(1)/usr/lib
 	$(CP) 	$(PKG_BUILD_DIR)/lib/libonionimuexp.so $(1)/usr/lib/
+endef
+
+## test program
+define Package/pwm-exp/install
+	$(INSTALL_DIR) $(1)/usr/sbin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/imu-xp-test $(1)/usr/sbin/
 endef
 
 # build the things
