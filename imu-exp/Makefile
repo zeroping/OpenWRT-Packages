@@ -54,7 +54,7 @@ endef
 
 # Enable position independent code for shared libraries
 TARGET_CFLAGS += $(FPIC)
-TARGET_LIBS = -loniondebug -lonioni2c # is this correct?
+TARGET_LIBS = -loniondebug -lonioni2c
 
 # Compiling
 define Build/Compile
