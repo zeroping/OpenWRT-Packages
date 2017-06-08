@@ -62,7 +62,7 @@ define Build/Compile
 	CC="$(TARGET_CC)" \
 	CFLAGS="$(TARGET_CFLAGS)" \
 	LDFLAGS="$(TARGET_LDFLAGS)" \
-	LIB="$(TARGET_LIBS)" \
+	LIB="$(TARGET_LIBS)"
 endef
 
 # InstallDev section required for libraries
@@ -81,10 +81,11 @@ define Package/libonionimuexp/install
 endef
 
 ## test program
-define Package/pwm-exp/install
+define Package/imu-exp-test/install
 	$(INSTALL_DIR) $(1)/usr/sbin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/imu-xp-test $(1)/usr/sbin/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/imu-exp-test $(1)/usr/sbin/
 endef
 
 # build the things
-$(eval $(call BuildPackage,liboniondebug))
+$(eval $(call BuildPackage,libonionimuexp))
+$(eval $(call BuildPackage,imu-exp-test))
