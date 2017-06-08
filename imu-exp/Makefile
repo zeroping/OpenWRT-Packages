@@ -18,7 +18,7 @@ PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_VERSION:=HEAD
-PKG_SOURCE_URL:=https://github.com/OnionIoT/imu-exp.git
+PKG_SOURCE_URL:=git@github.com:OnionIoT/imu-exp.git # TODO: change this back to https:// once you're done
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)
 PKG_SOURCE:=$(PKG_NAME).tar.gz
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
@@ -40,7 +40,7 @@ C library for the Onion IMU Expansion
 endef
 
 ## example program
-define Package/imu-exp-test
+define Package/imu-exp-example
 	SECTION:=onion
 	CATEGORY:=Onion
 	SUBMENU:=Drivers
@@ -48,7 +48,7 @@ define Package/imu-exp-test
 	DEPENDS:=+liboniondebug +libonioni2c +libonionimuexp
 endef
 
-define Package/imu-exp-test/description
+define Package/imu-exp-example/description
 Example IMU Expansion program
 endef
 
@@ -81,11 +81,11 @@ define Package/libonionimuexp/install
 endef
 
 ## test program
-define Package/imu-exp-test/install
-	$(INSTALL_DIR) $(1)/usr/sbin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/imu-exp-test $(1)/usr/sbin/
+define Package/imu-exp-example/install
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/imu-exp-example $(1)/usr/bin/
 endef
 
 # build the things
 $(eval $(call BuildPackage,libonionimuexp))
-$(eval $(call BuildPackage,imu-exp-test))
+$(eval $(call BuildPackage,imu-exp-example))
