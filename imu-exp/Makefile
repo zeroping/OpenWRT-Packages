@@ -53,17 +53,32 @@ define Package/imu-exp-example/description
 Example IMU Expansion program
 endef
 
+## python library
+define Package/pyImuExp
+	SECTION:=onion
+	CATEGORY:=Onion
+	SUBMENU:=Libraries
+	TITLE:=Python module to control the Onion IMU Expansion
+	DEPENDS:=+liboniondebug +libonioni2c +libonionimuexp +python-base +pyOmegaExpansion
+endef
+
+define Package/pyImuExp/description
+Python module to control the Onion IMU Expansion
+endef
+
 # Enable position independent code for shared libraries
 TARGET_CFLAGS += $(FPIC)
 TARGET_LIBS = -loniondebug -lonioni2c
-
+PYTHON_VERSION = "2.7"
+TARGET_PYINC += "-I$(STAGING_DIR)/usr/include/python$(PYTHON_VERSION)/"
 # Compiling
 define Build/Compile
 	$(MAKE) -C $(PKG_BUILD_DIR) \
 	CC="$(TARGET_CC)" \
 	CFLAGS="$(TARGET_CFLAGS)" \
 	LDFLAGS="$(TARGET_LDFLAGS)" \
-	LIB="$(TARGET_LIBS)"
+	LIB="$(TARGET_LIBS)" \
+	PYINC="$(TARGET_PYINC)"
 endef
 
 # InstallDev section required for libraries
@@ -87,6 +102,14 @@ define Package/imu-exp-example/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/imu-exp-example $(1)/usr/bin/
 endef
 
+## python library
+define Package/pyImuExp/install
+	# install the python module
+	$(INSTALL_DIR) $(1)/usr/lib/python$(PYTHON_VERSION)/OmegaExpansion
+	$(CP)   $(PKG_BUILD_DIR)/lib/python/imuExp.so $(1)/usr/lib/python$(PYTHON_VERSION)/OmegaExpansion
+endef
+
 # build the things
 $(eval $(call BuildPackage,libonionimuexp))
 $(eval $(call BuildPackage,imu-exp-example))
+$(eval $(call BuildPackage,pyImuExp))
