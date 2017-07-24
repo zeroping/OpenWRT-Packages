@@ -53,6 +53,19 @@ define Package/imu-exp-example/description
 Example IMU Expansion program
 endef
 
+## main program
+define Package/imu-exp
+	SECTION:=onion
+	CATEGORY:=Onion
+	SUBMENU:=Drivers
+	TITLE:=IMU Expansion command line program
+	DEPENDS:=+liboniondebug +libonioni2c +libonionimuexp
+endef
+
+define Package/imu-exp/description
+IMU Expansion command line program
+endef
+
 ## python library
 define Package/pyImuExp
 	SECTION:=onion
@@ -102,6 +115,12 @@ define Package/imu-exp-example/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/imu-exp-example $(1)/usr/bin/
 endef
 
+## main program
+define Package/imu-exp/install
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/imu-exp $(1)/usr/bin/
+endef
+
 ## python library
 define Package/pyImuExp/install
 	# install the python module
@@ -112,4 +131,5 @@ endef
 # build the things
 $(eval $(call BuildPackage,libonionimuexp))
 $(eval $(call BuildPackage,imu-exp-example))
+$(eval $(call BuildPackage,imu-exp))
 $(eval $(call BuildPackage,pyImuExp))
